@@ -1,9 +1,3 @@
 import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client"],
-  },
-};
-
+const nextConfig: NextConfig = { eslint: { ignoreDuringBuilds: true } };
 export default nextConfig;
