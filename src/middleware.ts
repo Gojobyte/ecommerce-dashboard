@@ -1,21 +1,23 @@
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((req) => {
-  const isLoggedIn = !!req.auth;
-  const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard");
-  const isOnAuth = req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname.startsWith("/register");
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("next-auth.session-token")?.value ||
+                request.cookies.get("__Secure-next-auth.session-token")?.value;
 
-  if (isOnDashboard && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  const isOnDashboard = request.nextUrl.pathname.startsWith("/dashboard");
+  const isOnAuth = request.nextUrl.pathname.startsWith("/login") ||
+                   request.nextUrl.pathname.startsWith("/register");
+
+  if (isOnDashboard && !token) {
+    return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 
-  if (isOnAuth && isLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+  if (isOnAuth && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/dashboard/:path*", "/login", "/register"],
