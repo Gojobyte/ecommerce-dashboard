@@ -54,7 +54,6 @@ const topProducts = [
   { name: "iPad Air M2", sales: 98, revenue: 78302, growth: 5.4, image: "📟" },
 ];
 
-// ─── Sidebar ────────────────────────────────────────────────────
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", active: true },
   { icon: ShoppingCart, label: "Commandes", badge: 24 },
@@ -64,105 +63,6 @@ const navItems = [
   { icon: Settings, label: "Paramètres" },
 ];
 
-function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
-  return (
-    <>
-      {open && (
-        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={onClose} />
-      )}
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full w-[260px] bg-[#1e293b] border-r border-[#334155] flex flex-col transition-transform duration-300 lg:translate-x-0 ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-[#334155]">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-sm">
-            EC
-          </div>
-          <div>
-            <h1 className="text-white font-bold text-sm">E-Commerce</h1>
-            <p className="text-[#64748b] text-xs">Dashboard Pro</p>
-          </div>
-          <button onClick={onClose} className="ml-auto lg:hidden text-[#64748b] hover:text-white">
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${
-                item.active
-                  ? "bg-blue-500/15 text-blue-400 font-medium"
-                  : "text-[#94a3b8] hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <item.icon size={18} />
-              <span>{item.label}</span>
-              {item.badge && (
-                <span className="ml-auto bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded-full">
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          ))}
-        </nav>
-
-        {/* User */}
-        <div className="px-3 py-4 border-t border-[#334155]">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold">
-              AS
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">Adoum Salah</p>
-              <p className="text-[#64748b] text-xs truncate">Admin</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </>
-  );
-}
-
-// ─── Stat Card ─────────────────────────────────────────────────
-function StatCard({
-  title, value, change, icon: Icon, color, subtitle,
-}: {
-  title: string; value: string; change: number; icon: React.ElementType; color: string; subtitle?: string;
-}) {
-  const isPositive = change >= 0;
-  return (
-    <div className="bg-[#1e293b] border border-[#334155] rounded-xl p-5 hover:border-[#475569] transition-all group">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-[#94a3b8] text-sm">{title}</p>
-          <p className="text-2xl font-bold text-white mt-1">{value}</p>
-          {subtitle && <p className="text-[#64748b] text-xs mt-1">{subtitle}</p>}
-        </div>
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
-          <Icon size={20} />
-        </div>
-      </div>
-      <div className="flex items-center gap-1 mt-3">
-        {isPositive ? (
-          <ArrowUpRight size={16} className="text-green-400" />
-        ) : (
-          <ArrowDownRight size={16} className="text-red-400" />
-        )}
-        <span className={`text-sm font-medium ${isPositive ? "text-green-400" : "text-red-400"}`}>
-          {isPositive ? "+" : ""}{change}%
-        </span>
-        <span className="text-[#64748b] text-xs ml-1">vs mois dernier</span>
-      </div>
-    </div>
-  );
-}
-
-// ─── Status Badge ──────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     "Livré": "bg-green-500/15 text-green-400",
@@ -177,14 +77,41 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
 
   return (
     <div className="min-h-screen bg-[#0f172a]">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {/* Sidebar */}
+      {sidebarOpen && <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+      <aside className={`fixed top-0 left-0 z-50 h-full w-[260px] bg-[#1e293b] border-r border-[#334155] flex flex-col transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-[#334155]">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-sm">EC</div>
+          <div>
+            <h1 className="text-white font-bold text-sm">E-Commerce</h1>
+            <p className="text-[#64748b] text-xs">Dashboard Pro</p>
+          </div>
+          <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden text-[#64748b] hover:text-white"><X size={20} /></button>
+        </div>
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => (
+            <button key={item.label} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${item.active ? "bg-blue-500/15 text-blue-400 font-medium" : "text-[#94a3b8] hover:text-white hover:bg-white/5"}`}>
+              <item.icon size={18} />
+              <span>{item.label}</span>
+              {item.badge && <span className="ml-auto bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded-full">{item.badge}</span>}
+            </button>
+          ))}
+        </nav>
+        <div className="px-3 py-4 border-t border-[#334155]">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold">AS</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-sm font-medium truncate">Adoum Salah</p>
+              <p className="text-[#64748b] text-xs truncate">Admin</p>
+            </div>
+          </div>
+        </div>
+      </aside>
 
       {/* Main */}
       <main className="lg:ml-[260px] min-h-screen">
@@ -192,12 +119,7 @@ export default function DashboardPage() {
         <header className="sticky top-0 z-30 bg-[#0f172a]/80 backdrop-blur-xl border-b border-[#1e293b]">
           <div className="flex items-center justify-between px-4 lg:px-8 py-4">
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-[#94a3b8] hover:text-white"
-              >
-                <Menu size={22} />
-              </button>
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-[#94a3b8] hover:text-white"><Menu size={22} /></button>
               <div>
                 <h2 className="text-white font-semibold text-lg">Dashboard</h2>
                 <p className="text-[#64748b] text-xs">Bienvenue, Adoum 👋</p>
@@ -206,17 +128,11 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3">
               <div className="hidden md:flex items-center gap-2 bg-[#1e293b] border border-[#334155] rounded-lg px-3 py-2">
                 <Search size={16} className="text-[#64748b]" />
-                <input
-                  type="text"
-                  placeholder="Rechercher..."
-                  className="bg-transparent text-sm text-white placeholder-[#64748b] outline-none w-40"
-                />
+                <input type="text" placeholder="Rechercher..." className="bg-transparent text-sm text-white placeholder-[#64748b] outline-none w-40" />
               </div>
               <button className="relative text-[#94a3b8] hover:text-white">
                 <Bell size={20} />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full text-[10px] text-white flex items-center justify-center">
-                  3
-                </span>
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full text-[10px] text-white flex items-center justify-center">3</span>
               </button>
             </div>
           </div>
@@ -225,65 +141,35 @@ export default function DashboardPage() {
         <div className="p-4 lg:p-8 space-y-6">
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <StatCard
-              title="Revenue Total"
-              value="82 600 €"
-              change={12.5}
-              icon={DollarSign}
-              color="bg-blue-500/15 text-blue-400"
-              subtitle="Ce mois: 10 200 €"
-            />
-            <StatCard
-              title="Commandes"
-              value="2 390"
-              change={8.2}
-              icon={ShoppingCart}
-              color="bg-green-500/15 text-green-400"
-              subtitle="En attente: 24"
-            />
-            <StatCard
-              title="Visiteurs"
-              value="46 100"
-              change={15.3}
-              icon={Eye}
-              color="bg-purple-500/15 text-purple-400"
-              subtitle="Taux conv: 5.2%"
-            />
-            <StatCard
-              title="Panier Moyen"
-              value="89 €"
-              change={-2.1}
-              icon={ShoppingBag}
-              color="bg-yellow-500/15 text-yellow-400"
-              subtitle="Objectif: 100 €"
-            />
-          </div>
-
-          {/* Charts Row */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {/* Revenue Chart */}
-            <div className="xl:col-span-2 bg-[#1e293b] border border-[#334155] rounded-xl p-5">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-white font-semibold">Revenue Mensuel</h3>
-                  <p className="text-[#64748b] text-sm mt-1">Évolution sur 12 mois</p>
+            {[
+              { title: "Revenue Total", value: "82 600 €", change: 12.5, icon: DollarSign, color: "bg-blue-500/15 text-blue-400", subtitle: "Ce mois: 10 200 €" },
+              { title: "Commandes", value: "2 390", change: 8.2, icon: ShoppingCart, color: "bg-green-500/15 text-green-400", subtitle: "En attente: 24" },
+              { title: "Visiteurs", value: "46 100", change: 15.3, icon: Eye, color: "bg-purple-500/15 text-purple-400", subtitle: "Taux conv: 5.2%" },
+              { title: "Panier Moyen", value: "89 €", change: -2.1, icon: ShoppingBag, color: "bg-yellow-500/15 text-yellow-400", subtitle: "Objectif: 100 €" },
+            ].map((stat) => (
+              <div key={stat.title} className="bg-[#1e293b] border border-[#334155] rounded-xl p-5 hover:border-[#475569] transition-all">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-[#94a3b8] text-sm">{stat.title}</p>
+                    <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
+                    <p className="text-[#64748b] text-xs mt-1">{stat.subtitle}</p>
+                  </div>
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.color}`}><stat.icon size={20} /></div>
                 </div>
-                <div className="flex items-center gap-1 bg-[#0f172a] rounded-lg p-1">
-                  {["Revenue", "Commandes", "Visiteurs"].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`px-3 py-1.5 rounded-md text-xs transition-all ${
-                        activeTab === tab || (activeTab === "overview" && tab === "Revenue")
-                          ? "bg-blue-500 text-white"
-                          : "text-[#94a3b8] hover:text-white"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
+                <div className="flex items-center gap-1 mt-3">
+                  {stat.change >= 0 ? <ArrowUpRight size={16} className="text-green-400" /> : <ArrowDownRight size={16} className="text-red-400" />}
+                  <span className={`text-sm font-medium ${stat.change >= 0 ? "text-green-400" : "text-red-400"}`}>{stat.change >= 0 ? "+" : ""}{stat.change}%</span>
+                  <span className="text-[#64748b] text-xs ml-1">vs mois dernier</span>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div className="xl:col-span-2 bg-[#1e293b] border border-[#334155] rounded-xl p-5">
+              <h3 className="text-white font-semibold">Revenue Mensuel</h3>
+              <p className="text-[#64748b] text-sm mt-1 mb-6">Évolution sur 12 mois</p>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={revenueData}>
                   <defs>
@@ -295,53 +181,21 @@ export default function DashboardPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
                   <YAxis stroke="#64748b" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1e293b",
-                      border: "1px solid #334155",
-                      borderRadius: "8px",
-                      color: "#f1f5f9",
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="#3b82f6"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorRevenue)"
-                  />
+                  <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155", borderRadius: "8px", color: "#f1f5f9" }} />
+                  <Area type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Category Pie */}
             <div className="bg-[#1e293b] border border-[#334155] rounded-xl p-5">
               <h3 className="text-white font-semibold">Catégories</h3>
               <p className="text-[#64748b] text-sm mt-1">Répartition des ventes</p>
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
-                  <Pie
-                    data={categoryData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={55}
-                    outerRadius={80}
-                    paddingAngle={4}
-                    dataKey="value"
-                  >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
+                  <Pie data={categoryData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={4} dataKey="value">
+                    {categoryData.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1e293b",
-                      border: "1px solid #334155",
-                      borderRadius: "8px",
-                      color: "#f1f5f9",
-                    }}
-                  />
+                  <Tooltip contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155", borderRadius: "8px", color: "#f1f5f9" }} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-2">
@@ -360,17 +214,13 @@ export default function DashboardPage() {
 
           {/* Orders + Products */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {/* Orders Table */}
             <div className="xl:col-span-2 bg-[#1e293b] border border-[#334155] rounded-xl p-5">
               <div className="flex items-center justify-between mb-5">
                 <div>
                   <h3 className="text-white font-semibold">Commandes Récentes</h3>
                   <p className="text-[#64748b] text-sm mt-1">Dernières transactions</p>
                 </div>
-                <button className="flex items-center gap-1 text-[#94a3b8] hover:text-white text-sm">
-                  <Filter size={14} />
-                  Filtrer
-                </button>
+                <button className="flex items-center gap-1 text-[#94a3b8] hover:text-white text-sm"><Filter size={14} />Filtrer</button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -389,17 +239,13 @@ export default function DashboardPage() {
                         <td className="py-3 px-2 text-white font-medium">{order.id}</td>
                         <td className="py-3 px-2">
                           <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold">
-                              {order.avatar}
-                            </div>
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold">{order.avatar}</div>
                             <span className="text-[#94a3b8]">{order.client}</span>
                           </div>
                         </td>
                         <td className="py-3 px-2 text-[#94a3b8] hidden md:table-cell">{order.product}</td>
                         <td className="py-3 px-2 text-white font-medium">{order.amount} €</td>
-                        <td className="py-3 px-2">
-                          <StatusBadge status={order.status} />
-                        </td>
+                        <td className="py-3 px-2"><StatusBadge status={order.status} /></td>
                       </tr>
                     ))}
                   </tbody>
@@ -407,7 +253,6 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Top Products */}
             <div className="bg-[#1e293b] border border-[#334155] rounded-xl p-5">
               <h3 className="text-white font-semibold">Top Produits</h3>
               <p className="text-[#64748b] text-sm mt-1 mb-5">Meilleurs ventes</p>
@@ -415,9 +260,7 @@ export default function DashboardPage() {
                 {topProducts.map((product, i) => (
                   <div key={product.name} className="flex items-center gap-3">
                     <span className="text-[#64748b] text-sm font-medium w-5">{i + 1}</span>
-                    <div className="w-10 h-10 rounded-lg bg-[#0f172a] flex items-center justify-center text-xl">
-                      {product.image}
-                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-[#0f172a] flex items-center justify-center text-xl">{product.image}</div>
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-sm font-medium truncate">{product.name}</p>
                       <p className="text-[#64748b] text-xs">{product.sales} ventes</p>
